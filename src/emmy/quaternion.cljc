@@ -12,7 +12,7 @@
   and [[emmy.numbers]]."
   (:refer-clojure :exclude [zero?])
   (:require [emmy.complex :as sc]
-            [emmy.differential :as d]
+            [emmy.dual :as d]
             [emmy.function :as f]
             [emmy.generic :as g]
             [emmy.matrix :as m]
@@ -110,12 +110,6 @@
   (arity [this] (arity this))
 
   d/IPerturbed
-  (perturbed? [_]
-    (or (d/perturbed? r)
-        (d/perturbed? i)
-        (d/perturbed? j)
-        (d/perturbed? k)))
-
   (replace-tag [_ old new]
     (Quaternion.
      (d/replace-tag r old new)
@@ -124,12 +118,20 @@
      (d/replace-tag k old new)
      m))
 
-  (extract-tangent [_ tag]
+  (extract-tangent [_ tag mode]
     (Quaternion.
-     (d/extract-tangent r tag)
-     (d/extract-tangent i tag)
-     (d/extract-tangent j tag)
-     (d/extract-tangent k tag)
+     (d/extract-tangent r tag mode)
+     (d/extract-tangent i tag mode)
+     (d/extract-tangent j tag mode)
+     (d/extract-tangent k tag mode)
+     m))
+
+  (extract-id [_ id]
+    (Quaternion.
+     (d/extract-id r id)
+     (d/extract-id i id)
+     (d/extract-id j id)
+     (d/extract-id k id)
      m))
 
   v/IKind
@@ -1321,7 +1323,7 @@
 
 ;; ### Real 4x4 matrices
 
-(def ONE-matrix
+(def ^:const ONE-matrix
   "4x4 matrix representation of the quaternion [[ONE]]."
   (m/by-rows
    [1 0 0 0]
@@ -1329,7 +1331,7 @@
    [0 0 1 0]
    [0 0 0 1]))
 
-(def I-matrix
+(def ^:const I-matrix
   "4x4 matrix representation of the quaternion [[I]]."
   (m/by-rows
    [0 1 0 0]
@@ -1337,7 +1339,7 @@
    [0 0 0 -1]
    [0 0 1 0]))
 
-(def J-matrix
+(def ^:const J-matrix
   "4x4 matrix representation of the quaternion [[J]]."
   (m/by-rows
    [0 0 1 0]
@@ -1345,7 +1347,7 @@
    [-1 0 0 0]
    [0 -1 0 0]))
 
-(def K-matrix
+(def ^:const K-matrix
   "4x4 matrix representation of the quaternion [[K]]."
   (m/by-rows
    [0 0 0 1]
@@ -1370,19 +1372,19 @@
 
 ;; ### Tensor Representations of Quaternions
 
-(def ONE-tensor
+(def ^:const ONE-tensor
   "4x4 down-up tensor representation of the quaternion [[ONE]]."
   (m/->structure ONE-matrix))
 
-(def I-tensor
+(def ^:const I-tensor
   "4x4 down-up tensor representation of the quaternion [[I]]."
   (m/->structure I-matrix))
 
-(def J-tensor
+(def ^:const J-tensor
   "4x4 down-up tensor representation of the quaternion [[J]]."
   (m/->structure J-matrix))
 
-(def K-tensor
+(def ^:const K-tensor
   "4x4 down-up tensor representation of the quaternion [[K]]."
   (m/->structure K-matrix))
 

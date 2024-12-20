@@ -2,6 +2,73 @@
 
 ## [unreleased]
 
+## [0.32.0]
+
+- #170:
+
+  - changes `D` and `partial` to use reverse mode automatic differentiation by
+    default, and fixes all associated tests
+
+  - adds `emmy.generic/{zero?,one?,identity?}` implementations (all false) to
+    `emmy.tape/Completed`, in case some collection type tries to simplify these
+    during reverse-mode AD
+
+- #185:
+
+  - adds a dynamic variable `emmy.calculus.derivative/*mode*` that allows the
+    user to switch between forward and reverse mode automatic differentiation
+
+  - adds a new `emmy.calculus.derivative/gradient` that acts like
+    `emmy.tape/gradient` but is capable of taking multiple variables
+
+  - adds new operators `emmy.calculus.derivative/{D-forward, D-reverse}` and
+    operator-returning-functions `emmy.calculus.derivative/{partial-forward,
+    partial-reverse}` that allow the user to explicitly invoke forward-mode or
+    reverse-mode automatic differentiation. `D` and `partial` still default to
+    forward-mode
+
+  - modifies `emmy.tape/gradient` to correctly error when passed invalid
+    selectors, just like `emmy.dual/derivative`.
+
+- #183:
+
+  - adds `emmy.{autodiff, tape}` to `emmy.sci`'s exported namespace set
+
+  - adds `emmy.dual/extract-id` implementations for all supported output types
+    (every type that already implements `emmy.dual/IPerturbed`)
+
+  - moves `emmy.tape/Completed` to `emmy.dual/Completed`; it doesn't really make
+    sense there, but this is the only current way to remove the circular
+    dependency between `emmy.dual` and `emmy.tape`. (`tape` needs a `dual`
+    import to gain `emmy.dual/IPerturbed`.)
+
+  - simplifies the `emmy.tape/gradient` implementation down to only handle
+    single real-or-structural arguments, just like `emmy.dual/derivative`. We'll
+    share the "handle-multiple-input" implementation between the two in a
+    follow-up PR
+
+  - makes the tests in `emmy.calculus.derivative` generic on the derivative
+    implementation, so we can run all tests in forward and reverse mode.
+
+- #182:
+
+  - moves the generic implementations for `TapeCell` and `Dual` to `emmy.autodiff`
+
+  - moves `emmy.calculus.derivative` to `emmy.dual/derivative`
+
+  - removes `emmy.dual/perturbed?` from `IPerturbed`, as this is no longer used.
+
+- #180 renames `emmy.differential` to `emmy.dual`, since the file now contains a
+  proper dual number implementation, not a truncated multivariate power series.
+
+- #179:
+
+  - Moves the `IPerturbed` implementation for functions to `emmy.function`, out
+    of `emmy.calculus.derivative`
+
+  - Adds a new `mode` parameter to `emmy.differential/extract-tangent`, in
+    preparation for allowing reverse and forward mode across all output types
+
 - #175:
 
   - Adds `emmy.env/{tau,-tau}` constants for the $\tau$ fans out there

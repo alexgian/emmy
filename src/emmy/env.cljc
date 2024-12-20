@@ -45,6 +45,7 @@
             [emmy.calculus.vector-calculus]
             [emmy.calculus.vector-field]
             [emmy.complex]
+            [emmy.dual]
             [emmy.expression]
             [emmy.expression.render :as render]
             [emmy.function :as f]
@@ -405,7 +406,9 @@
   curvature-components]
 
  [emmy.calculus.derivative
-  derivative D D-as-matrix taylor-series]
+  D D-forward D-reverse
+  partial-forward partial-reverse
+  D-as-matrix taylor-series]
 
  [emmy.calculus.form-field
   form-field? nform-field? oneform-field?
@@ -502,6 +505,8 @@
   basis-components->vector-field
   vector-field->basis-components
   coordinatize evolution]
+
+ [emmy.dual derivative]
 
  ;; Special Relativity
 
